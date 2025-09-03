@@ -2,30 +2,20 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Controllers\Employee\RegisteredEmployeeController; 
-use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Employee;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -37,21 +27,26 @@ class LoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-    $employee = Auth::guard('employee')->user(); // Assuming you want to get the authenticated employee
+        // Fetch employee by email
+        $employee = Employee::where('email', $this->input('email'))->first();
 
-    if (! $employee || ! Hash::check($this->password . $employee->password_salt, $employee->password)) {
-        RateLimiter::hit($this->throttleKey());
+        // Check if employee exists and password matches (SHA-256 + salt)
+        if (! $employee || hash('sha256', $this->input('password') . $employee->password_salt) !== $employee->password) {
+            RateLimiter::hit($this->throttleKey());
 
-        throw ValidationException::withMessages([
-            'email' => trans('auth.failed'),
-        ]);
-    }
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // Log in employee manually
+        Auth::guard('employee')->login($employee);
 
         RateLimiter::clear($this->throttleKey());
     }
@@ -59,15 +54,13 @@ class LoginRequest extends FormRequest
     /**
      * Ensure the login request is not rate limited.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
-
-        event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
@@ -84,6 +77,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
     }
 }
