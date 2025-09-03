@@ -43,7 +43,7 @@ class RegisteredEmployeeController extends Controller
         $salt = bin2hex(random_bytes(16)); // 32 chars long salt
 
         // combine password + salt before hashing
-        $hashedPassword = Hash::make($request->password . $salt);
+        $hashedPassword = hash('sha256', $request->password . $salt);
 
         $employee = Employee::create([
             'first_name'     => $request->first_name,
