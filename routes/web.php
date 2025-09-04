@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employee\EmployeeLoginController;
 use App\Http\Controllers\Employee\RegisteredEmployeeController;
+use App\Http\Controllers\Employee\ProfileController;
 
 Route::get('/', function () {
     return view('employee.auth.login');
@@ -35,5 +36,9 @@ Route::post('/register', [RegisteredEmployeeController::class, 'store'])
 Route::get('/dashboard', function () {
     return view('employee.dashboard');
 })->middleware(['auth:employee'])->name('dashboard');
+
+Route::resource('profile', ProfileController::class)->middleware('auth:employee');
+Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+
 
 
