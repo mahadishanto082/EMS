@@ -42,9 +42,9 @@ Route::get('/dashboard', function () {
     return view('employee.dashboard');
 })->middleware(['auth:employee'])->name('dashboard');
 
-Route::resource('profile', ProfileController::class)->middleware('auth:employee');
-Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-
+Route::get('/profile', [ProfileController::class, 'index'])->name('employee.profile')->middleware('auth:employee');
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('Employee.profile.edit')->middleware('auth:employee');
+Route::put('/profile', [ProfileController::class, 'update'])->name('employee.profile.update')->middleware('auth:employee');
 
 Route::resource('leave_requests', LeaveRequestController::class)->middleware('auth:employee');
 

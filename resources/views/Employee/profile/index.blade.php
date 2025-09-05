@@ -63,7 +63,7 @@
               </tbody>
             </table>
             <div class="text-center mt-4">
-              <a href="{{ route('profile.edit') }}" class="btn btn-primary">Edit Profile</a>
+           <a href="{{ route('Employee.profile.edit') }}" class="btn btn-primary px-4 py-2" style="border-radius: 10px;">Edit Profile</a>
             </div>
           </div>
         </div>

@@ -20,14 +20,20 @@ class ProfileController extends Controller
         $employee = Auth::guard('employee')->user();
         return view('Employee.profile.index', compact('employee'));
     }
+    public function show($id)
+    {
+     //
+    }
 
     // Edit logged-in employee profile
     public function edit()
     {
         $employee = Auth::guard('employee')->user();
         return view('Employee.profile.edit', compact('employee'));
+        
+       
     }
- 
+    
 
     // Update logged-in employee profile
     public function update(Request $request)
