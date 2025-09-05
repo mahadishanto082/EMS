@@ -40,17 +40,67 @@
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 500px;">
 
     <!-- Profile -->
-    <a href="{{ route('profile.index') }}" class="dashboard-card" style="text-decoration: none;">
+    <a href="{{ route('employee.profile') }}" class="dashboard-card" style="text-decoration: none;">
     <i class="fa-solid fa-user" style="font-size: 2.5rem; color:#00AEEF; margin-bottom: 10px;"></i>
     <p style="font-weight:600; margin: 10px 0 0; ">Profile</p>
 </a>
 
 
     <!-- Attendance -->
-    <button onclick="location.href='attendance.html'" class="dashboard-card">
-        <i class="fa-solid fa-calendar-check" style="font-size: 2.5rem; color:#00AEEF;"></i>
-        <p style="font-weight:600; margin: 10px 0 0;">Attendance</p>
-    </button>
+   <!-- Attendance Button -->
+<button type="button" class="dashboard-card" data-bs-toggle="modal" data-bs-target="#attendanceModal">
+    <i class="fa-solid fa-calendar-check" style="font-size: 2.5rem; color:#00AEEF;"></i>
+    <p style="font-weight:600; margin:10px 0 0;">Attendance</p>
+</button>
+<div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="attendanceModalLabel">Mark Attendance</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="attendanceForm">
+          <div class mb-3>
+            <label for="employeeName" class="form-label">Employee Name</label>
+           
+          </div>
+          <div class mb-3>
+            <label for="position" class="form-label">Position</label>
+           
+          </div>
+          <!-- Current Date -->
+          <div class="mb-3">
+            <label for="attendanceDate" class="form-label">Date</label>
+            <input type="text" class="form-control" id="attendanceDate" readonly>
+          </div>
+
+          <!-- Time Slot (admin-defined) -->
+          <div class="mb-3">
+            <label for="timeSlot" class="form-label">Time Slot</label>
+            <select id="timeSlot" class="form-select" required>
+              <option value="">Select Time Slot</option>
+              <option value="9AM-5PM">9AM - 5PM</option>
+              <option value="10AM-6PM">10AM - 6PM</option>
+              <option value="12PM-8PM">12PM - 8PM</option>
+            </select>
+          </div>
+
+          <!-- Check-in / Check-out Buttons -->
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
+            <button type="button" class="btn btn-danger" id="checkOutBtn">Check Out</button>
+          </div>
+        </form>
+
+        <!-- Confirmation Message -->
+        <div id="attendanceMsg" class="mt-3 text-center" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- Leave -->
     <!-- Leave Button -->
@@ -133,5 +183,19 @@
     // e.preventDefault(); // Uncomment if you want to prevent actual POST
     toast.show();
   });
+
+  document.getElementById('attendanceDate').value = new Date().toLocaleDateString();
+
+const msg = document.getElementById('attendanceMsg');
+
+document.getElementById('checkInBtn').addEventListener('click', function(){
+    msg.style.display = 'block';
+    msg.innerHTML = '<span class="text-success fw-bold">Checked In at ' + new Date().toLocaleTimeString() + '</span>';
+});
+
+document.getElementById('checkOutBtn').addEventListener('click', function(){
+    msg.style.display = 'block';
+    msg.innerHTML = '<span class="text-danger fw-bold">Checked Out at ' + new Date().toLocaleTimeString() + '</span>';
+});
 </script>
 @endpush

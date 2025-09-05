@@ -21,7 +21,7 @@
   <div class="container my-5">
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <div class="card shadow-sm">
+        
           <div class="card-header bg-primary text-white text-center">
             <h3 class="mb-0">Edit Employee Profile</h3>
           </div>
