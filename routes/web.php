@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employee\EmployeeLoginController;
 use App\Http\Controllers\Employee\RegisteredEmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
+use App\Http\Controllers\Employee\LeaveRequestController;
 
 Route::get('/', function () {
     return view('employee.auth.login');
@@ -23,6 +24,10 @@ Route::get('/employee/login', [EmployeeLoginController::class, 'create'])->name(
 
 // Handle login submission
 Route::post('/employee/login', [EmployeeLoginController::class, 'store'])->name('employee-login.store');
+// Employee Registration Routes
+Route::post('/employee/logout', [EmployeeLoginController::class, 'destroy'])
+                ->middleware('auth:employee')
+                ->name('employee.logout');
 
 
 
@@ -39,6 +44,9 @@ Route::get('/dashboard', function () {
 
 Route::resource('profile', ProfileController::class)->middleware('auth:employee');
 Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+
+
+Route::resource('leave_requests', LeaveRequestController::class)->middleware('auth:employee');
 
 
 

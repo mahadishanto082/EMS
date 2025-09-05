@@ -79,4 +79,8 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
     }
+    public function logout(): void
+    {
+        Auth::guard('employee')->logout();
+    }
 }

@@ -68,23 +68,50 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form action=" #" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Message</label>
-                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Send Message</button>
-                        </form>
-                    </div>
+  <form id="messageForm" method="POST" action="{{ route("leave_requests.store") }}">
+    @csrf
+    <!-- Date Field -->
+    <div class="mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input type="date" class="form-control" id="date" name="date" required>
+    </div>
+
+    <!-- Position Field -->
+    <div class="mb-3">
+      <label for="position" class="form-label">Position</label>
+      <input type="text" class="form-control" id="position" name="position" required>
+    </div>
+
+    <!-- Email Field -->
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+
+    <!-- Message Field -->
+    <div class="mb-3">
+      <label for="message" class="form-label">Message</label>
+      <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Send Message</button>
+  </form>
+</div>
+<!-- Toast Notification -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+  <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Message Sent Successfully!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+
+
 
       </div>
       
@@ -96,3 +123,15 @@
   </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+  const messageForm = document.getElementById('messageForm');
+  const toastEl = document.getElementById('successToast');
+  const toast = new bootstrap.Toast(toastEl, { delay: 10000 }); // 10 seconds
+
+  messageForm.addEventListener('submit', function(e) {
+    // e.preventDefault(); // Uncomment if you want to prevent actual POST
+    toast.show();
+  });
+</script>
+@endpush

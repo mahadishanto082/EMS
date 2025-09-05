@@ -10,16 +10,33 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ms-auto gap-2">
+  <!-- Home Button with Icon -->
   <li class="nav-item">
     <a class="fw-semibold btn btn-primary px-3 py-2 text-white" 
        style="border-radius: 10px;" 
-       aria-current="page" href="#">Home</a>
+       aria-current="page" href="{{ route('dashboard') }}">
+       <i class="fa-solid fa-house"></i>
+    </a>
   </li>
 
+  <!-- Inbox Button with Icon -->
   <li class="nav-item">
-    <a class="fw-semibold btn btn-primary px-3 py-2 text-white" 
+    <a class="fw-semibold btn btn-info px-3 py-2 text-white" 
        style="border-radius: 10px;" 
-       aria-current="page" href="#">Logout</a>
+       href={{ route('leave_requests.index') }}>
+       <i class="fa-solid fa-inbox"></i>
+    </a>
+  </li>
+
+  <!-- Logout Button with Icon -->
+  <li class="nav-item">
+    <form method="POST" action="{{ route('employee.logout') }}">
+      @csrf
+      <button type="submit" class="fw-semibold btn btn-danger px-3 py-2 text-white" 
+              style="border-radius: 10px;">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </form>
   </li>
 </ul>
 

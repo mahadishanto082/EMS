@@ -38,4 +38,5 @@ class AuthController extends Controller
             'employee' => $employee,
         ]);
     }
+    
 }

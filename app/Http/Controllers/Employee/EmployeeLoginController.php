@@ -21,6 +21,16 @@ class EmployeeLoginController extends Controller
 
         return redirect()->intended('/dashboard');
     }
+    public function destroy(Request $request)
+    {
+        auth()->guard('employee')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/employee/login');
+    }
 
     
 }
