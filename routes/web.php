@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Employee\EmployeeLoginController;
 use App\Http\Controllers\Employee\RegisteredEmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
@@ -50,3 +51,15 @@ Route::resource('leave_requests', LeaveRequestController::class)->middleware('au
 
 
 
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin Login Routes
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Admin Dashboard Route (Protected)
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->middleware('auth:admin')->name('dashboard');
+});
