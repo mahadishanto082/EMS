@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('components.layouts.admin')
 
 @section('title')
     Dashboard
@@ -23,80 +23,75 @@
   }
 }
 </style>
-
 @endsection
 
-@section('page-info')
-<div style="display: flex; align-items: center; position: relative; height: 60px;">
-  <h1 class="animated-greeting" style="margin: 0 auto; text-align: center; flex: 1;">
-    Welcome back, Admin!
-  </h1>
-  <div class="date" style="position: absolute; right: 0; font-weight: bold;">
-    {{ date('l, d M Y') }} <br>
-    {{ date('h:i A') }}
-  </div>
-</div>
+@section('content')
 
+    {{-- Greeting --}}
+    <div style="display: flex; align-items: center; position: relative; height: 60px;">
+      <h1 class="animated-greeting" style="margin: 0 auto; text-align: center; flex: 1;">
+        Welcome back, Admin!
+      </h1>
+      <div class="date" style="position: absolute; right: 0; font-weight: bold;">
+        {{ date('l, d M Y') }} <br>
+        {{ date('h:i A') }}
+      </div>
+    </div>
 
-    <div class="br-pagetitle">
-   
+    {{-- Page Title --}}
+    <div class="br-pagetitle mt-4">
         <i class="icon ion-ios-home-outline"></i>
-        
         <div>
             <h4>Dashboard</h4>
             <p class="mg-b-0">Here is today's information</p>
         </div>
     </div>
-@endsection
 
-@section('content')
-    <div class="row row-sm">
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-info rounded overflow-hidden">
-                <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                    <i class="ion ion-earth tx-60 lh-0 tx-white op-7"></i>
-                    <div class="mg-l-20">
-                    <p class="tx-12 tx-uppercase tx-white-8">Total Visits</p>
-                    <h3 class="tx-lato tx-white mg-b-0">12,345</h3> <!-- Replace with dynamic value -->
+    {{-- Dashboard Cards --}}
+    <div class="row mt-4">
+        <!-- Total Employees -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-users fa-2x text-primary mb-2"></i>
+                    <h5 class="card-title">Total Employees</h5>
+                    <h3 class="fw-bold">120</h3> {{-- later dynamic --}}
                 </div>
-                    
-                </div>
-                <div id="ch1" class="ht-50 tr-y-1"></div>
             </div>
-        </div><!-- col-3 -->
+        </div>
 
-
-
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-info rounded overflow-hidden">
-                <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                    <i class="ion ion-earth tx-60 lh-0 tx-white op-7"></i>
-                    
+        <!-- Active Employees -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-user-check fa-2x text-success mb-2"></i>
+                    <h5 class="card-title">Active Employees</h5>
+                    <h3 class="fw-bold">95</h3>
                 </div>
-                <div id="ch1" class="ht-50 tr-y-1"></div>
             </div>
-        </div><!-- col-3 -->
+        </div>
 
-        <div class="col-sm-6 col-xl-3 mg-t-20 mg-sm-t-0">
-            <div class="bg-purple rounded overflow-hidden">
-                <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                    <i class="ion ion-bag tx-60 lh-0 tx-white op-7"></i>
-                  
+        <!-- Leave Requests -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-calendar-days fa-2x text-warning mb-2"></i>
+                    <h5 class="card-title">Leave Requests</h5>
+                    <h3 class="fw-bold">8</h3>
                 </div>
-                <div id="ch3" class="ht-50 tr-y-1"></div>
             </div>
-        </div><!-- col-3 -->
+        </div>
 
-        <div class="col-sm-6 col-xl-3 mg-t-20 mg-sm-t-0">
-            <div class="bg-purple rounded overflow-hidden">
-                <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                    <i class="ion ion-bag tx-60 lh-0 tx-white op-7"></i>
-                   
+        <!-- Feedback -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-comment-dots fa-2x text-info mb-2"></i>
+                    <h5 class="card-title">Feedback</h5>
+                    <h3 class="fw-bold">15</h3>
                 </div>
-                <div id="ch3" class="ht-50 tr-y-1"></div>
             </div>
-        </div><!-- col-3 -->
+        </div>
     </div>
 
-    
 @endsection
