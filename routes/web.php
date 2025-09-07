@@ -2,10 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Employee\EmployeeLoginController;
 use App\Http\Controllers\Employee\RegisteredEmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\Employee\LeaveRequestController;
+
 
 Route::get('/', function () {
     return view('employee.auth.login');
@@ -62,4 +64,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.home');
     })->middleware('auth:admin')->name('home');
+
+
+    Route::resource('employees', EmployeeController::class);
+    Route::patch('/employees/{id}/toggle-status', [EmployeeController::class, 'toggleStatus'])
+    ->name('employees.toggleStatus');
 });

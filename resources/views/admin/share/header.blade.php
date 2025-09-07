@@ -25,14 +25,24 @@
       <!-- User Dropdown -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://via.placeholder.com/32" alt="User Avatar" class="rounded-circle me-2">
-          <span>John Doe</span>
+         <i class="fa-regular fa-user-circle fs-4 me-2"></i>
+          <span>
+            {{ Auth::guard('admin')->user()->name }}
+          </span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
           <li><a class="dropdown-item" href="#">Profile</a></li>
           <li><a class="dropdown-item" href="#">Settings</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="#">Logout</a></li>
+          <li>
+    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        Logout
+    </a>
+</li>
+
         </ul>
       </li>
     </ul>

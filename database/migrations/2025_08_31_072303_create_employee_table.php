@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('position');
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             
             $table->timestamps();
         });

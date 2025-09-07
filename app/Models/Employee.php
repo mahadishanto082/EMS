@@ -24,10 +24,16 @@ class Employee extends Authenticatable
         'password',
         'password_salt',
         'position',
+        'status',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date',
+
     ];
 }
