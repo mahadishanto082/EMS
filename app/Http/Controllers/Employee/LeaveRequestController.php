@@ -23,27 +23,30 @@ class LeaveRequestController extends Controller
 
     // Store a newly created leave request in storage
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'required|string|max:255',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'date' => 'required|date',
+        'message' => 'required|string|max:1000',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $leaveRequest = new LeaveRequest();
-        $leaveRequest->employee_id = Auth::id();
-        $leaveRequest->start_date = $request->start_date;
-        $leaveRequest->end_date = $request->end_date;
-        $leaveRequest->reason = $request->reason;
-        $leaveRequest->status = 'Pending';
-        $leaveRequest->save();
-
-        return redirect()->route('employee.leave_requests.index')->with('success', 'Leave request submitted successfully.');
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
     }
+
+    $employee = Auth::user(); // assuming you use default guard for employees
+
+    $leaveRequest = new LeaveRequest();
+    $leaveRequest->employee_id = $employee->id;
+    $leaveRequest->date = $request->date;
+    $leaveRequest->email = $employee->email; // optional
+    $leaveRequest->position = $employee->position; // optional
+    $leaveRequest->message = $request->message;
+    $leaveRequest->status = 'Pending';
+    $leaveRequest->save();
+
+    return redirect()->route('leave_requests.index')->with('success', 'Leave request submitted successfully.');
+}
+
 
     // Display the specified leave request
     public function show($id)
@@ -51,5 +54,14 @@ class LeaveRequestController extends Controller
         $employeeId = Auth::id();
         $leaveRequest = LeaveRequest::where('id', $id)->where('employee_id', $employeeId)->firstOrFail();
         return view('employee.leave_requests.show', compact('leaveRequest'));
+    }
+
+    public function destroy($id)
+    {
+        $employeeId = Auth::id();
+        $leaveRequest = LeaveRequest::where('id', $id)->where('employee_id', $employeeId)->firstOrFail();
+        $leaveRequest->delete();
+
+        return redirect()->route('leave_requests.index')->with('success', 'Leave request deleted successfully.');
     }
 }

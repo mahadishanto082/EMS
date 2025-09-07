@@ -6,10 +6,14 @@ class LeaveRequest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'employee_id',
-        'name',
+        'date',
         'email',
-        'reason',
+        'position',
+        'message',
         'status',
     ];
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

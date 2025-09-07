@@ -14,7 +14,11 @@
     animation: gradientBG 10s ease infinite;
 }
 
-
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
 </style>
 
 <div class="leave-bg">
@@ -31,7 +35,6 @@
             @if(session('success'))
               <div class="alert alert-success">{{ session('success') }}</div>
             @endif
-
             @if(session('error'))
               <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
@@ -46,7 +49,7 @@
                   <th scope="col">Position</th>
                   <th scope="col">Reason</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Feedback</th>
+                  <th scope="col">Admin Feedback</th>
                   <th scope="col">Action</th>
                 </tr>
               </thead>
@@ -54,20 +57,22 @@
                 @foreach($leaveRequests as $index => $request)
                 <tr>
                   <th scope="row">{{ $index + 1 }}</th>
-                  <td>{{ $request->date }}</td>
-                  <td>{{ $request->email }}</td>
-                  <td>{{ $request->position }}</td>
-                  <td>{{ $request->reason ?? $request->message }}</td>
+                  <td>{{ $request->date ?? 'N/A' }}</td>
+                  <td>{{ $request->email ?? 'N/A' }}</td>
+                  <td>{{ $request->position ?? 'N/A' }}</td>
+                  <td>{{ $request->message ?? 'N/A' }}</td>
                   <td>
-                    @if($request->status == 'Pending')
+                    @if(strtolower($request->status) === 'pending')
                       <span class="badge bg-warning text-dark">Pending</span>
-                    @elseif($request->status == 'Approved')
+                    @elseif(strtolower($request->status) === 'approved')
                       <span class="badge bg-success">Approved</span>
-                    @else
+                    @elseif(strtolower($request->status) === 'rejected')
                       <span class="badge bg-danger">Rejected</span>
+                    @else
+                      <span class="badge bg-secondary">Unknown</span>
                     @endif
                   </td>
-                  <td>{{ $request->feedback ?? 'N/A' }}</td>
+                  <td>{{ $request->admin_feedback ?? 'N/A' }}</td>
                   <td>
                     <!-- Edit Button -->
                     <a href="{{ route('leave_requests.edit', $request->id) }}" class="btn btn-sm btn-primary mb-1">Edit</a>
@@ -81,6 +86,12 @@
                   </td>
                 </tr>
                 @endforeach
+
+                @if($leaveRequests->isEmpty())
+                <tr>
+                  <td colspan="8" class="text-center">No leave requests found.</td>
+                </tr>
+                @endif
               </tbody>
             </table>
 

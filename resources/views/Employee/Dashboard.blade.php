@@ -118,35 +118,21 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-  <form id="messageForm" method="POST" action="{{ route("leave_requests.store") }}">
+ <form action="{{ route('leave_requests.store') }}" method="POST">
     @csrf
-    <!-- Date Field -->
     <div class="mb-3">
-      <label for="date" class="form-label">Date</label>
-      <input type="date" class="form-control" id="date" name="date" required>
+        <label for="date" class="form-label">Leave Date</label>
+        <input type="date" name="date" id="date" class="form-control" required>
     </div>
 
-    <!-- Position Field -->
     <div class="mb-3">
-      <label for="position" class="form-label">Position</label>
-      <input type="text" class="form-control" id="position" name="position" required>
+        <label for="message" class="form-label">Reason</label>
+        <textarea name="message" id="message" class="form-control" rows="3" required></textarea>
     </div>
 
-    <!-- Email Field -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" required>
-    </div>
+    <button type="submit" class="btn btn-primary">Submit Leave Request</button>
+</form>
 
-    <!-- Message Field -->
-    <div class="mb-3">
-      <label for="message" class="form-label">Message</label>
-      <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-    </div>
-
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary">Send Message</button>
-  </form>
 </div>
 <!-- Toast Notification -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">

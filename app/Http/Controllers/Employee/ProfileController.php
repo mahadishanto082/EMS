@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Employee;
+use App\Models\Employee; // make sure this model points to your actual table
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Storage;
@@ -20,20 +20,13 @@ class ProfileController extends Controller
         $employee = Auth::guard('employee')->user();
         return view('Employee.profile.index', compact('employee'));
     }
-    public function show($id)
-    {
-     //
-    }
 
     // Edit logged-in employee profile
     public function edit()
     {
         $employee = Auth::guard('employee')->user();
         return view('Employee.profile.edit', compact('employee'));
-        
-       
     }
-    
 
     // Update logged-in employee profile
     public function update(Request $request)
@@ -41,22 +34,31 @@ class ProfileController extends Controller
         $employee = Auth::guard('employee')->user();
 
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:employees,email,' . $employee->id],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:employee,email,' . $employee->id],
+            'user_name' => ['nullable', 'string', 'max:255', 'unique:employee,user_name,' . $employee->id],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'position' => ['nullable', 'string', 'max:255'],
+            'date_of_birth' => ['nullable', 'date'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
-
+        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $employee->name = $request->name;
+        $employee->first_name = $request->first_name;
+        $employee->last_name = $request->last_name;
         $employee->email = $request->email;
+        $employee->user_name = $request->user_name;
+        $employee->phone_number = $request->phone_number;
+        $employee->position = $request->position;
+        $employee->date_of_birth = $request->date_of_birth;
 
-        if ($request->filled('password')) {
-            $employee->password = Hash::make($request->password);
-        }
+
+       
 
         if ($request->hasFile('profile_image')) {
             // Delete old image
@@ -78,8 +80,8 @@ class ProfileController extends Controller
             $employee->profile_image = $imagePath;
         }
 
-        $employee->save();
+        $employee->update(); // Use update method instead of save
 
-        return redirect()->route('profile.index')->with('success', 'Profile updated successfully.');
+        return redirect()->route('employee.profile')->with('success', 'Profile updated successfully.');
     }
 }
