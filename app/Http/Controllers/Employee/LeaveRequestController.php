@@ -47,6 +47,34 @@ class LeaveRequestController extends Controller
     return redirect()->route('leave_requests.index')->with('success', 'Leave request submitted successfully.');
 }
 
+public function edit($id)
+    {
+        $employeeId = Auth::id();
+        $leaveRequest = LeaveRequest::where('id', $id)->where('employee_id', $employeeId)->firstOrFail();
+        return view('employee.leave_requests.edit', compact('leaveRequest'));
+    }
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $employeeId = Auth::id();
+        $leaveRequest = LeaveRequest::where('id', $id)->where('employee_id', $employeeId)->firstOrFail();
+        $leaveRequest->date = $request->date;
+        $leaveRequest->message = $request->message;
+        $leaveRequest->status = 'Pending'; // Reset status to Pending on update
+        $leaveRequest->save();
+
+        return redirect()->route('leave_requests.index')->with('success', 'Leave request updated successfully.');
+    }
+    
+
 
     // Display the specified leave request
     public function show($id)

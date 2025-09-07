@@ -3,7 +3,6 @@
 
 @section('content')
 <style>
-/* Animated gradient background */
 .leave-bg {
     min-height: 85vh;
     display: flex;
@@ -13,7 +12,6 @@
     background-size: 400% 400%;
     animation: gradientBG 10s ease infinite;
 }
-
 @keyframes gradientBG {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
@@ -31,7 +29,6 @@
           </div>
           <div class="card-body">
 
-            <!-- Success / Error Messages -->
             @if(session('success'))
               <div class="alert alert-success">{{ session('success') }}</div>
             @endif
@@ -39,24 +36,23 @@
               <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
 
-            <!-- Leave Requests Table -->
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Position</th>
-                  <th scope="col">Reason</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Admin Feedback</th>
-                  <th scope="col">Action</th>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Email</th>
+                  <th>Position</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                  <th>Admin Feedback</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($leaveRequests as $index => $request)
                 <tr>
-                  <th scope="row">{{ $index + 1 }}</th>
+                  <th>{{ $index + 1 }}</th>
                   <td>{{ $request->date ?? 'N/A' }}</td>
                   <td>{{ $request->email ?? 'N/A' }}</td>
                   <td>{{ $request->position ?? 'N/A' }}</td>
@@ -74,11 +70,38 @@
                   </td>
                   <td>{{ $request->admin_feedback ?? 'N/A' }}</td>
                   <td>
-                    <!-- Edit Button -->
-                    <a href="{{ route('leave_requests.edit', $request->id) }}" class="btn btn-sm btn-primary mb-1">Edit</a>
+                    <!-- Edit Modal Trigger -->
+                    <button class="btn btn-sm btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#leaveModal{{ $request->id }}">Edit</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="leaveModal{{ $request->id }}" tabindex="-1" aria-labelledby="leaveModalLabel{{ $request->id }}" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="leaveModalLabel{{ $request->id }}">Edit Leave Request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="{{ route('leave_requests.update', $request->id) }}" method="POST">
+                              @csrf
+                              @method('PUT')
+                              <div class="mb-3">
+                                <label for="date{{ $request->id }}" class="form-label">Leave Date</label>
+                                <input type="date" name="date" id="date{{ $request->id }}" class="form-control" value="{{ $request->date }}" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="message{{ $request->id }}" class="form-label">Reason</label>
+                                <textarea name="message" id="message{{ $request->id }}" class="form-control" rows="3" required>{{ $request->message }}</textarea>
+                              </div>
+                              <button type="submit" class="btn btn-primary">Update</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <!-- Delete Button -->
-                    <form action="{{ route('leave_requests.destroy', $request->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete this leave request?');">
+                    <form action="{{ route('leave_requests.destroy', $request->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?');">
                       @csrf
                       @method('DELETE')
                       <button type="submit" class="btn btn-sm btn-danger mb-1">Delete</button>
@@ -101,5 +124,4 @@
     </div>
   </div>
 </div>
-
 @endsection
