@@ -3,10 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\LeaveController;
+use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\SlotController;
+
 use App\Http\Controllers\Employee\EmployeeLoginController;
 use App\Http\Controllers\Employee\RegisteredEmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\Employee\LeaveRequestController;
+
+
+
 
 
 Route::get('/', function () {
@@ -69,4 +76,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::patch('/employees/{id}/toggle-status', [EmployeeController::class, 'toggleStatus'])
     ->name('employees.toggleStatus');
+
+   Route::resource('leave_requests', LeaveController::class)->middleware('auth:admin');
+   Route::patch('/leave_requests/{id}/approve', [LeaveController::class, 'approve'])
+    ->name('leave_requests.approve')->middleware('auth:admin');
+    Route::patch('/leave_requests/{id}/reject', [LeaveController::class, 'reject'])
+    ->name('leave_requests.reject')->middleware('auth:admin');
+    
+
+   Route::resource('attendance', \App\Http\Controllers\Admin\AttendanceController::class)->middleware('auth:admin');
+Route::resource('slots', SlotController::class)->middleware('auth:admin');
+  
 });

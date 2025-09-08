@@ -77,6 +77,8 @@
                 <div class="card-body text-center">
                     <i class="fa-solid fa-calendar-days fa-2x text-warning mb-2"></i>
                     <h5 class="card-title">Leave Requests</h5>
+                    <a href="{{ route('admin.leave_requests.index') }}" class="stretched-link text-decoration-none"></a>
+
                     <h3 class="fw-bold">8</h3>
                 </div>
             </div>

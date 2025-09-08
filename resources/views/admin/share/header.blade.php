@@ -12,15 +12,14 @@
     <!-- Right Side -->
     <ul class="navbar-nav ms-auto d-flex align-items-center">
 
-      <!-- Notifications -->
-      <li class="nav-item me-3 position-relative">
-        <a class="nav-link" href="#">
-          <i class="fa-regular fa-bell fs-5"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            3
-          </span>
-        </a>
-      </li>
+      
+</li>
+
+</a>
+
+</li>
+
+
 
       <!-- User Dropdown -->
       <li class="nav-item dropdown">

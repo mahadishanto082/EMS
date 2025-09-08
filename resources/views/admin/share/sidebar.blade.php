@@ -34,19 +34,20 @@
             <div class="collapse ps-4" id="attendance-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a href="#" class="link-light nav-link px-2 py-1">Track Attendance</a></li>
-                    <li><a href="#" class="link-light nav-link px-2 py-1">Create Attendance</a></li>
+                    <li><a href="{{ route('admin.attendance.create') }}" class="link-light nav-link px-2 py-1">Create Attendance</a></li>
+                    <li><a href="{{ route('admin.slots.create') }}" class="link-light nav-link px-2 py-1">Create Slot</a></li>
                 </ul>
             </div>
         </div>
 
         <!-- Settings -->
-        <a href="#" class="nav-link text-white d-flex align-items-center">
+        <a href="" class="nav-link text-white d-flex align-items-center">
             <i class="fa-solid fa-gear me-2"></i>
             Settings
         </a>
 
         <!-- Messages -->
-        <a href="#" class="nav-link text-white d-flex align-items-center">
+        <a href="{{ route('admin.leave_requests.index') }}" class="nav-link text-white d-flex align-items-center">
             <i class="fa-regular fa-envelope me-2"></i>
             Messages
         </a>

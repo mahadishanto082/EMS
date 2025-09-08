@@ -1,4 +1,5 @@
-@extends('components.layouts.website')
+@extends('components.layouts.admin')
+
 @section('title', 'Leave Requests')
 
 @section('content')
@@ -13,14 +14,7 @@
     background-size: 400% 400%;
     animation: gradientBG 10s ease infinite;
 }
-
-@keyframes gradientBG {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
 </style>
-
 <div class="leave-bg">
   <div class="container my-5">
     <div class="row justify-content-center">
@@ -58,48 +52,58 @@
                 <tr>
                   <th scope="row">{{ $key + 1 }}</th>
                   <td>{{ $request->date ?? 'N/A' }}</td>
-                  <td>{{ $request->email ?? 'N/A' }}</td>
-                  <td>{{ $request->position ?? 'N/A' }}</td>
-                  <td>{{ $request->message ?? 'N/A' }}</td>
+                  <td>{{ $request->employee->email ?? 'N/A' }}</td>
+                  <td>{{ $request->employee->position ?? 'N/A' }}</td>
+                  <td>{{ $request->reason ?? 'N/A' }}</td>
                   <td>
-                    @if(strtolower($request->status) === 'pending')
+                    @if($request->status == 'Pending')
                       <span class="badge bg-warning text-dark">Pending</span>
-                    @elseif(strtolower($request->status) === 'approved')
+                    @elseif($request->status == 'Approved')
                       <span class="badge bg-success">Approved</span>
-                    @elseif(strtolower($request->status) === 'rejected')
+                    @elseif($request->status == 'Rejected')
                       <span class="badge bg-danger">Rejected</span>
                     @else
-                      <span class="badge bg-secondary">Unknown</span>
+                      N/A
                     @endif
                   </td>
                   <td>{{ $request->admin_feedback ?? 'N/A' }}</td>
                   <td>
-                    <!-- Edit Button -->
-                    <a href="{{ route('leave_requests.edit', $request->id) }}" class="btn btn-sm btn-primary mb-1">Edit</a>
+                  <form action="{{ route('admin.leave_requests.approve', $request->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('PATCH')
+    <button type="submit" class="btn btn-success">Approve</button>
+</form>
+
+<form action="{{ route('admin.leave_requests.reject', $request->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('PATCH')
+    <button type="submit" class="btn btn-danger">Reject</button>
+</form>
+
 
                     <!-- Delete Button -->
-                    <form action="{{ route('leave_requests.destroy', $request->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete this leave request?');">
+                    <form action="{{ route('admin.leave_requests.destroy', $request->id) }}" method="POST" style="display:inline;">
                       @csrf
                       @method('DELETE')
-                      <button type="submit" class="btn btn-sm btn-danger mb-1">Delete</button>
+                      <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this request?');">Delete</button>
                     </form>
-                  </td>
+                    </td>
                 </tr>
                 @endforeach
-
                 @if($leaveRequests->isEmpty())
                 <tr>
                   <td colspan="8" class="text-center">No leave requests found.</td>
                 </tr>
                 @endif
-              </tbody>
+                </tbody>
             </table>
-
-          </div>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
+    </div>
 </div>
-
 @endsection
+
+                    
+
