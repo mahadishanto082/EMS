@@ -11,6 +11,7 @@ use App\Http\Controllers\Employee\EmployeeLoginController;
 use App\Http\Controllers\Employee\RegisteredEmployeeController;
 use App\Http\Controllers\Employee\ProfileController;
 use App\Http\Controllers\Employee\LeaveRequestController;
+use App\Http\Controllers\Employee\DashboardController;
 
 
 
@@ -51,6 +52,8 @@ Route::post('/register', [RegisteredEmployeeController::class, 'store'])
 Route::get('/dashboard', function () {
     return view('employee.dashboard');
 })->middleware(['auth:employee'])->name('dashboard');
+Route::post('/attendance/checkin', [DashboardController::class, 'checkIn'])->name('attendance.checkin');
+Route::post('/attendance/checkout', [DashboardController::class, 'checkOut'])->name('attendance.checkout');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('employee.profile')->middleware('auth:employee');
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('Employee.profile.edit')->middleware('auth:employee');

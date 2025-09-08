@@ -55,38 +55,69 @@
     </button>
 
     <!-- Attendance Modal -->
-    <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="attendanceModalLabel">Mark Attendance</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Attendance Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="attendanceModalLabel">Mark Attendance</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="attendanceForm">
+          <div class="mb-3">
+            <label for="attendanceDate" class="form-label">Date</label>
+            <input type="text" class="form-control" id="attendanceDate" value="{{ \Carbon\Carbon::today()->toDateString() }}" readonly>
           </div>
-          <div class="modal-body">
-            <form id="attendanceForm">
-              <div class="mb-3">
-                <label for="attendanceDate" class="form-label">Date</label>
-                <input type="text" class="form-control" id="attendanceDate" readonly>
-              </div>
-              <div class="mb-3">
-                <label for="timeSlot" class="form-label">Time Slot</label>
-                <select id="timeSlot" class="form-select" required>
-                  <option value="">Select Time Slot</option>
-                  <option value="9AM-5PM">9AM - 5PM</option>
-                  <option value="10AM-6PM">10AM - 6PM</option>
-                  <option value="12PM-8PM">12PM - 8PM</option>
-                </select>
-              </div>
-              <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
-                <button type="button" class="btn btn-danger" id="checkOutBtn">Check Out</button>
-              </div>
-            </form>
-            <div id="attendanceMsg" class="mt-3 text-center" style="display:none;"></div>
+
+          <div class="mb-3">
+            <label for="timeSlot" class="form-label">Time Slot</label>
+            <select class="form-select" id="timeSlot">
+    @if(isset($slots) && count($slots) > 0)
+        @foreach($slots as $slot)
+            <option value="{{ $slot->id }}" 
+                @if(isset($currentSlotId) && $slot->id == $currentSlotId) selected @endif>
+                {{ $slot->name }} ({{ \Carbon\Carbon::parse($slot->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($slot->end_time)->format('h:i A') }})
+            </option>
+        @endforeach
+    @else
+        <option value="morning" selected>Morning (09:30 AM - 6:30 PM)</option>
+    @endif
+</select>
+
+
+
+
           </div>
-        </div>
+
+          <div class="mb-3">
+    <label class="form-label">Today's Status</label>
+    @if(isset($todayAttendance) && $todayAttendance)
+        <p>Checked In: {{ $todayAttendance->check_in ?? 'Not yet' }}</p>
+        <p>Checked Out: {{ $todayAttendance->check_out ?? 'Not yet' }}</p>
+    @else
+        <p>No attendance recorded for today.</p>
+    @endif
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <button type="button" class="btn btn-success" id="checkInBtn"
+        @if(isset($todayAttendance) && $todayAttendance->check_in) disabled @endif>
+        Check In
+    </button>
+
+    <button type="button" class="btn btn-danger" id="checkOutBtn"
+        @if(isset($todayAttendance) && $todayAttendance->check_out) disabled @endif>
+        Check Out
+    </button>
+</div>
+
+        </form>
+        <div id="attendanceMsg" class="mt-3 text-center" style="display:none;"></div>
       </div>
     </div>
+  </div>
+</div>
 
     <!-- Leave -->
     <button type="button" class="dashboard-card btn btn-light" data-bs-toggle="modal" data-bs-target="#leaveModal">
@@ -194,5 +225,54 @@
       msg.style.display = 'block';
       msg.innerHTML = '<span class="text-danger fw-bold">Checked Out at ' + new Date().toLocaleTimeString() + '</span>';
   });
+
+  $(document).ready(function(){
+
+    $('#checkInBtn').click(function(){
+        let slotId = $('#timeSlot').val();
+
+        $.ajax({
+            url: "{{ route('attendance.checkin') }}",
+            type: "POST",
+            data: {
+                slot_id: slotId,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(res){
+                $('#attendanceMsg').text(res.message).css('color','green').show();
+                $('#checkInBtn').prop('disabled', true);
+                $('#checkOutBtn').prop('disabled', false);
+            },
+            error: function(err){
+                $('#attendanceMsg').text('Something went wrong').css('color','red').show();
+            }
+        });
+    });
+
+    $('#checkOutBtn').click(function(){
+        let slotId = $('#timeSlot').val();
+
+        $.ajax({
+            url: "{{ route('attendance.checkout') }}",
+            type: "POST",
+            data: {
+                slot_id: slotId,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(res){
+                if(res.success){
+                    $('#attendanceMsg').text(res.message).css('color','green').show();
+                    $('#checkOutBtn').prop('disabled', true);
+                } else {
+                    $('#attendanceMsg').text(res.message).css('color','red').show();
+                }
+            },
+            error: function(err){
+                $('#attendanceMsg').text('Something went wrong').css('color','red').show();
+            }
+        });
+    });
+
+});
 </script>
 @endpush

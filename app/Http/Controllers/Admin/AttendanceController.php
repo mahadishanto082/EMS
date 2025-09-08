@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+
 use App\Models\Employee;
 use App\Models\Slot;
+use App\Models\EmployeeSlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -31,7 +33,7 @@ class AttendanceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'required|exists:employee,id',
             'slot_id' => 'required|exists:slots,id',
         ]);
     
